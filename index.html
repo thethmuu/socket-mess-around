@@ -68,5 +68,29 @@
     <form id="form" action="">
       <input id="input" autocomplete="off" /><button>Send</button>
     </form>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      var socket = io();
+
+      var form = document.querySelector('form');
+      var input = document.querySelector('input');
+      var messages = document.querySelector('#messages');
+
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        if (input.value) {
+          socket.emit('chat-message', input.value);
+          input.value = '';
+        }
+
+        socket.on('chat-message', (msg) => {
+          var chatItem = document.createElement('li');
+          chatItem.textContent = msg;
+          messages.appendChild(chatItem);
+          window.scroll(0, document.body.scrollHeight);
+        });
+      });
+    </script>
   </body>
 </html>
